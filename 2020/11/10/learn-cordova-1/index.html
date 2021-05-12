@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="zh-CN,en,ja">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lixuguang.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","width":220,"display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="作者：李旭光引用请标明出处  前言很长时间没有写博客了，因为最近换了工作，原来的技术栈基本上都换了，现在接触了很多新的技术栈，Cordova 就是其中之一。 接下来这篇文章就是我的学习笔记，以供回顾，写的不好请勿拍砖。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从零开始：学习Cordova（一）">
+<meta property="og:url" content="http://lixuguang.github.io/2020/11/10/learn-cordova-1/index.html">
+<meta property="og:site_name" content="李旭光的成长博客">
+<meta property="og:description" content="作者：李旭光引用请标明出处  前言很长时间没有写博客了，因为最近换了工作，原来的技术栈基本上都换了，现在接触了很多新的技术栈，Cordova 就是其中之一。 接下来这篇文章就是我的学习笔记，以供回顾，写的不好请勿拍砖。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://ftp.bmp.ovh/imgs/2020/11/b06130e60ab12a42.png">
+<meta property="og:image" content="https://cordova.apache.org/static/img/guide/cordovaapparchitecture.png">
+<meta property="article:published_time" content="2020-11-10T00:00:00.000Z">
+<meta property="article:modified_time" content="2021-05-12T23:06:57.687Z">
+<meta property="article:author" content="李旭光">
+<meta property="article:tag" content="Cordova">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ftp.bmp.ovh/imgs/2020/11/b06130e60ab12a42.png">
+
+<link rel="canonical" href="http://lixuguang.github.io/2020/11/10/learn-cordova-1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>从零开始：学习Cordova（一） | 李旭光的成长博客</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">李旭光的成长博客</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">求知若饥，虚心若愚。</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/lixuguang" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://lixuguang.github.io/2020/11/10/learn-cordova-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="李旭光">
+      <meta itemprop="description" content="学习 | 生活 | 成长">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="李旭光的成长博客">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          从零开始：学习Cordova（一）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-10 00:00:00" itemprop="dateCreated datePublished" datetime="2020-11-10T00:00:00+00:00">2020-11-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-05-12 23:06:57" itemprop="dateModified" datetime="2021-05-12T23:06:57+00:00">2021-05-12</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%A7%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">大前端</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%A4%A7%E5%89%8D%E7%AB%AF/%E7%A7%BB%E5%8A%A8%E5%BC%80%E5%8F%91/" itemprop="url" rel="index"><span itemprop="name">移动开发</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>作者：李旭光<br>引用请标明出处</p>
+</blockquote>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>很长时间没有写博客了，因为最近换了工作，原来的技术栈基本上都换了，现在接触了很多新的技术栈，<code>Cordova</code> 就是其中之一。</p>
+<p>接下来这篇文章就是我的学习笔记，以供回顾，写的不好请勿拍砖。</p>
+<span id="more"></span>
+<h2 id="一、What-is-Cordova？-Cordova是个啥？"><a href="#一、What-is-Cordova？-Cordova是个啥？" class="headerlink" title="一、What is Cordova？ Cordova是个啥？"></a>一、What is Cordova？ Cordova是个啥？</h2><p><img src="https://ftp.bmp.ovh/imgs/2020/11/b06130e60ab12a42.png" alt="Logo"><br>移动端开发和 <code>Web</code> 开发有一些不一样，<code>Web</code> 端开发面向的是浏览器，而移动端开发面向的是各种移动设备，那么针对各种移动设备提供的 <code>SDK</code> 进行开发的话，我们通常称之为***<code>原生开发</code>***，原生开发虽然通常调用底层 <code>Api</code> ，性能更好，但是因为不同移动终端底层技术不一样，所以每种设备都要单独开发，这样开发成本和能力要求都比较高，所以通常都会有一些框架来兼容各种平台，就好比 <code>Java</code> 虚拟机可以运行在 <code>Mac/Windows/Linux</code> 一样，为了能够写一套移动端代码可以在各种设备中使用，于是乎就有了 <code>Cordova</code> 。</p>
+<p>上面说了这么一堆废话，其实简言之，***<code>Cordova</code> 就是提供了跨设备调用底层Api的移动端开发框架（这种开发方式又叫做Hybird 模式）***</p>
+<p>知道这一点应该就够了，当然这是我认为的。</p>
+<p><code>Cordova</code> 的官网地址如下</p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://cordova.apache.org/">https://cordova.apache.org/</a></p>
+</blockquote>
+<p>其实从这里就可以看出， <code>Cordova</code> 是 <code>Apache</code> 基金下的一个项目，其官网是这样介绍它的</p>
+<blockquote>
+<p>Mobile apps with HTML, CSS &amp; JS<br>Target multiple platforms with one code base<br>Free and open source</p>
+</blockquote>
+<p>翻译成中文的话就是</p>
+<blockquote>
+<p>使用 <code>Html</code> ，<code>CSS</code> 和 <code>JS</code> 进行移动端应用开发<br>一份代码多平台使用<br>免费并且开源</p>
+</blockquote>
+<p>三句话解释了 <code>Cordova</code> 的三个方面，</p>
+<ul>
+<li>使用前端技术开发-对前端开发友好</li>
+<li>跨平台-节省开发工时，降低开发难度-从图标看支持 <code>Android/IOS/WP</code>三大平台</li>
+<li>免费不用解释开源的话意味着会有很多人贡献代码</li>
+</ul>
+<p>以上奠定了 <code>Cordova</code> 强大及流行的基础。</p>
+<h2 id="二、快速上手"><a href="#二、快速上手" class="headerlink" title="二、快速上手"></a>二、快速上手</h2><p>在使用 <code>Cordova</code> 做移动端开发之前需要做一些环境准备工作，首先要安装 <code>Node</code> 以及它携带的 <code>Npm</code> 包管理器，这个现代的前端开发应该都知道，我这里就不多说了，装它就完了。</p>
+<p>装好之后我们就要用 <code>Npm</code> 全局安装一下 <code>Cordova</code> 项目的依赖，命令很简单；</p>
+<p>方便的话还要装一下 <code>Git</code> ，因为一些命令要在 <code>git-cmd</code> 上执行，当然管理代码也是需要它的，所以装吧。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g cordova</span><br></pre></td></tr></table></figure>
+<p>就这么简单就可以开发 <code>Cordova</code> 应用了，接下来我们要创建一个项目，创建项目的命令也十分简单。在命令行工具中输入下面的命令你就创建了一个 <code>Cordova</code> 的应用</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cordova create &lt;path&gt; <span class="comment">// 这里的path是项目的路径</span></span><br></pre></td></tr></table></figure>
+<p>如果要查看创建项目时还能设置什么参数你可以执行下面的命令</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cordova help create</span><br></pre></td></tr></table></figure>
+<p>怎么样是不是超级简单。<br>做了上面的工作你就创建了一个具备基本功能的 <code>Cordova</code> 项目，接下来我们要给项目配置一些东西。</p>
+<p>首先刚才讲到了， <code>Cordova</code> 是一个跨平台的框架，那么你的项目要适配什么平台你需要进行一些配置， <code>cd</code> 到项目目录下执行下面的命令</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cordova platform add &lt;platform name&gt; <span class="comment">// platform name 为适配平台的名称</span></span><br></pre></td></tr></table></figure>
+<p>如果不知道名称是什么命令行工具也贴心的给了查询用的命令，通过此命令你可以看到你安装了什么平台的适配，有哪些可以用</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cordova platform</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>执行了这个命令你将看到下面这样的 <code>list</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/***</span></span><br><span class="line"><span class="comment">Installed platforms:</span></span><br><span class="line"><span class="comment">Available platforms:</span></span><br><span class="line"><span class="comment">  android ^9.0.0</span></span><br><span class="line"><span class="comment">  browser ^6.0.0</span></span><br><span class="line"><span class="comment">  electron ^1.0.0</span></span><br><span class="line"><span class="comment">  windows ^7.0.0</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+<p>项目也创建了，简单的配置工作也完成了，我们可以启动项目看一下效果了，那么我们就该执行运行项目的命令了</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cordova run &lt;platform name&gt; <span class="comment">// platform name 适配平台的名称</span></span><br></pre></td></tr></table></figure>
+<p>到这我们就快速的创建并运行起了一个 <code>Cordova</code> 的工程。</p>
+<h3 id="小Tip"><a href="#小Tip" class="headerlink" title="小Tip"></a>小Tip</h3><p>如上执行启动命令后，默认会启动<em><strong>8000</strong></em>端口，如果被占用的话可以通过增加命令行参数的形式改变端口号，参数如下设置</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cordova run browser --target=chrome --port=<span class="number">9090</span></span><br></pre></td></tr></table></figure>
+<p>以上就可以自定义端口及浏览器启动应用了。</p>
+<h2 id="三、详细了解"><a href="#三、详细了解" class="headerlink" title="三、详细了解"></a>三、详细了解</h2><h3 id="1、概览"><a href="#1、概览" class="headerlink" title="1、概览"></a>1、概览</h3><p>官网开头介绍了 <code>Cordova</code> 的身世和适用范围，前面开头已经讲过了不想再讲，直接看看 <code>Cordova</code> 的架构设计图。<br><img src="https://cordova.apache.org/static/img/guide/cordovaapparchitecture.png" alt="此处是个架构图"></p>
+<center>Cordova 架构图</center>
+
+<p>这个图理解起来不难，大的方面是两个部分，底层是 <code>MobileOS</code> ，也就是手机的操作系统本身，上层是由 <code>Cordova</code> 构建的框架；</p>
+<p><code>Cordova</code> 内部的话是两层结构：</p>
+<ul>
+<li>上层的话是由前端代码构成的 <code>WebApp</code> 部分；</li>
+<li>下层是 <code>Cordova</code> 的视图渲染引擎，它为 <code>WebApp</code> 提供了 <code>HtmlApi</code> 和 <code>CordovaApi</code> ；</li>
+</ul>
+<p>也就是说我们可以调用 <code>html</code> 的原生 <code>Api</code> 也可以使用 <code>Cordova</code> 提供的 <code>jsApi</code> ；</p>
+<p><code>Cordova</code> 还提供了丰富的插件系统；通过 <code>Cordova</code> 的视图引擎调用 <code>Cordova</code> 的 <code>NativeApi</code> 来调用一些 <code>Cordova</code> 提供好的调用设备的信息的 <code>Api</code> ，另外也可以调用一些用户自定义的 <code>Api</code> ；</p>
+<p><code>Cordova</code> 视图引擎和插件系统再将上层的需求通过 <code>MobileOS</code> 开放的 <code>Api</code> 能力实现具体功能，由此完成了整个 <code>Cordova</code> 框架的使用；</p>
+<p>总的来说这个原理跟大多数跨平台的框架原理都类似，由框架提供统一的 <code>Api</code> 能力，再由框架处理不同平台的兼容，这里特别之处在于渲染引擎可以允许使用前端原生的 <code>Api</code> ，这将大大降低开发的难度。</p>
+<h4 id="WebView"><a href="#WebView" class="headerlink" title="WebView"></a>WebView</h4><p>说到移动端开发，不知道 <code>WebView</code> 应该是不可能的，在原生移动应用中，<code>WebView</code> 就是移动应用内部嵌入的一个‘浏览器’，它可以允许你使用前端技术展示内容。</p>
+<h4 id="WebApp"><a href="#WebApp" class="headerlink" title="WebApp"></a>WebApp</h4><p><code>WebApp</code> 跟 <code>WebView</code> 两个词有些像，事实上它们也确实有些关系，<code>WebApp</code> 从名字就可以看出是使用 <code>Web</code> 技术开发的 <code>App</code> ，那么它跟 <code>WebView</code> 是什么关系呢，打个比方，<code>WebView</code> 就是个快递盒子， <code>WebApp</code> 就是你买的商品，一个是<em><strong>容器</strong></em>，一个是<em><strong>内容</strong></em>；这样说应该就明白了吧，通过前端技术开发的 <code>App</code> 通过 <code>WebView</code> 嵌入到 <code>App</code> 中，就可以带给用户原生应用的体验，忘了说 <code>WebApp</code> 是只能用浏览器访问的 <code>App</code> ；</p>
+<p>和纯 <code>WebApp</code> 不同，嵌入到 <code>WebView</code> 中的 <code>WebApp</code> 需要有一个配置文件，***<code>config.xml</code>*** ，它在项目的根目录下，说明了应用的一些信息，这个文件必不可少！！！</p>
+<h4 id="插件系统"><a href="#插件系统" class="headerlink" title="插件系统"></a>插件系统</h4><p>刚刚在上面的架构图中我们介绍了 <code>Cordova</code> 的插件系统，它提供了我们通过 <code>js</code> 调用 <code>MobileApi</code> 的能力，如电源/相机/联系人等等；<br>官方维护了核心的功能，当然如果你愿意也可以调用一些第三方提供的插件，你可以方便的通过 <code>npm</code> 包管理器安装；</p>
+<p><em><strong>但是有一点必须要说</strong></em>：项目创建后默认是不带任何插件的，即使是官方的核心插件也是需要你自己导入进去，第三方的更不用说了，另外<code>Cordova</code> 只提供了功能 <code>Api</code> 并不包含任何的 <code>UI</code> 部件和 <code>MV</code> 框架（你可以根据自己喜欢使用 <code>Angular</code> 或者 <code>Vue</code> 或者其他什么都可以），这一点要牢记。</p>
+<h4 id="开发工作流"><a href="#开发工作流" class="headerlink" title="开发工作流"></a>开发工作流</h4><p>使用 <code>Cordova</code> 开发 <code>MobileApp</code> 的时候即可以开发<strong>多个</strong>平台的 <code>App</code> （一次开发多平台可用，降低开发成本），也可以专注开发<strong>某一</strong>平台的<code>App</code> （使用前端技术开发，降低开发难度），因此开发工作流也分为两种：</p>
+<h5 id="跨平台-CLI-的工作流"><a href="#跨平台-CLI-的工作流" class="headerlink" title="跨平台(CLI)的工作流"></a>跨平台(CLI)的工作流</h5><p>官网上说了很多，也不难理解，这里用我自己的话说就是， <code>Cordova</code> 提供了一个牛叉的 <code>CLI</code> 工具，它可以自动的完成一次编码多平台构建的事，你只需要按照它说的方式开发就行。：）</p>
+<h5 id="平台为中心的工作流"><a href="#平台为中心的工作流" class="headerlink" title="平台为中心的工作流"></a>平台为中心的工作流</h5><p>这里不得不说我没有看很明白，但是结合下面的注意事项我是这样理解的，因为只为某一平台服务，所以有一些针对此平台的特殊的功能或者插件你就可以使用了（虽然不太清楚为什么这么做，如果你知道告诉我，谢谢），<strong>但是一旦使用了这种开发方式，那么就回不到跨平台开发了</strong>，因为你使用了针对某一平台才能调用的代码，这也不难理解，从字里行间感觉就是不建议使用这种开发工作流（好的好的，知道了）。</p>
+<p>好的，接下来开发 <code>App</code> 啦；</p>
+<h3 id="2、开发应用"><a href="#2、开发应用" class="headerlink" title="2、开发应用"></a>2、开发应用</h3><p>快速上手中已经介绍了如何准备、创建和启动应用，如何添加平台，这里就不多说了。说些没讲过的。</p>
+<p>上面说过检查目前平台安装情况的话可以使用下面的命令</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cordova platforms</span><br></pre></td></tr></table></figure>
+<p>我们也可以使用另一个命令来看，我试验了一下，效果是一样的。。。（问号脸，一样的为什么搞两个命令）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cordova platform ls</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>事后我发现，无论我使用的命令是 <code>platform</code> 还是 <code>platforms</code> 加不加 <code>ls</code> 都可以查到当前安装的平台。。。 啊~兼容性好强。</p>
+</blockquote>
+<p>每执行一次 <code>add</code> 命令，你就会发现工程目录下的 <code>platforms</code> 目录下就对应生成了一个对应平台的文件夹，切勿手贱删除，你虽然删除了文件夹，但是各处设置的 <code>platform</code> 并没有去掉，会导致报错，如果要删除请使用 <code>remove</code> 命令。 想知道还有哪些命令的话就看下面的链接吧。⇒ <a target="_blank" rel="noopener" href="http://cordova.axuer.com/docs/zh-cn/latest/reference/cordova-cli/index.html#cordova-platform-command">命令大全</a></p>
+<h3 id="安装构建的先决条件"><a href="#安装构建的先决条件" class="headerlink" title="安装构建的先决条件"></a>安装构建的先决条件</h3><p>因为 <code>Cordova</code> 的底层还是要调用 <code>MobileOS</code> 的接口，所以各平台的 <code>SDK</code> 是必须要装的，当然这里指的是你要进行构建的平台，比如你要构建 <code>Android</code> 应用，那么你就要装 <code>Android</code> 的 <code>SDK</code> ，<code>IOS</code> 同理。<strong>这里有一个例外</strong><code>broswer</code>平台是不需要依赖其他 <code>SDK</code> 的（明明是开发 <code>APP</code> ，这里只是为了验证画面比较方便）<br>要看你是否满足了构建需要的依赖，可以执行下面的命令查看</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cordova requirements</span><br></pre></td></tr></table></figure>
+<p>执行完后你会得到如下结果</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Requirements check results <span class="keyword">for</span> android:</span><br><span class="line">Java JDK: installed .</span><br><span class="line">Android SDK: installed</span><br><span class="line">Android target: installed android-<span class="number">19</span>,android-<span class="number">21</span>,android-<span class="number">22</span>,android-<span class="number">23</span>,Google Inc.:Google Apis:<span class="number">19</span>,Google Inc.:Google Apis (x86 System Image):<span class="number">19</span>,Google Inc.:Google Apis:<span class="number">23</span></span><br><span class="line">Gradle: installed</span><br><span class="line"></span><br><span class="line">Requirements check results <span class="keyword">for</span> ios:</span><br><span class="line">Apple OS X: not installed</span><br><span class="line">Cordova tooling <span class="keyword">for</span> iOS requires Apple OS X</span><br><span class="line"><span class="built_in">Error</span>: Some <span class="keyword">of</span> requirements check failed</span><br></pre></td></tr></table></figure>
+<p>这样你就可以清楚的知道自己需要安装哪些依赖才能完成对应平台的构建，简直方便的不要不要的。<br>具体想知道不同的平台都依赖些什么，你可以参见下面的链接；</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://cordova.axuer.com/docs/zh-cn/latest/guide/platforms/android/index.html#requirements-and-support">Android平台的要求</a></li>
+<li><a target="_blank" rel="noopener" href="http://cordova.axuer.com/docs/zh-cn/latest/guide/platforms/ios/index.html#requirements-and-support">iOS平台的要求</a></li>
+<li><a target="_blank" rel="noopener" href="http://cordova.axuer.com/docs/zh-cn/latest/guide/platforms/win8/index.html#requirements-and-support">Windows平台的要求</a></li>
+</ul>
+<h3 id="构建-App"><a href="#构建-App" class="headerlink" title="构建 App"></a>构建 <code>App</code></h3><p>在 <code>create</code> 项目之后，项目的根目录下会生成一个 <code>www</code> 目录，这个目录包含了 <code>webapp</code> 的入口页面 <code>index.html</code> ，入口文件的话是 <code>www/js/index.js</code> 文件的 <code>deviceready</code> 事件中。</p>
+<p>如果要构建代码的话，执行下面的命令</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cordova build</span><br></pre></td></tr></table></figure>
+<p>这个命令会构建你安装的所有平台，如果只想构建某一平台的话，可以把平台的名字加在命令后面，如</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cordova build ios</span><br></pre></td></tr></table></figure>
+<p>如果想了解更多的参数的话，可以看一下后面的链接。⇒ <a target="_blank" rel="noopener" href="http://cordova.axuer.com/docs/zh-cn/latest/reference/cordova-cli/index.html#cordova-build-command">更多参数</a></p>
+<h3 id="测试-App"><a href="#测试-App" class="headerlink" title="测试 App"></a>测试 <code>App</code></h3><p>构建完 <code>App</code> 之后我们就可以测试了，通常各平台的 <code>SDK</code> 中会提供模拟器，我们只需要执行下面的命令就可以启动模拟器。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cordova emulate android</span><br></pre></td></tr></table></figure>
+<p>当然如果你觉得用实机查看更自然一些的话，也可以把手机插上数据线与电脑建立连接，然后执行下面的命令就可以了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cordova run android</span><br></pre></td></tr></table></figure>
+<p>上面演示的是 <code>Android</code> 的 <code>App</code> 测试过程，每个平台虽然基本类似，但还是有出入，所以，下面提供了不同平台的调试方法，供你预览。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://cordova.axuer.com/docs/zh-cn/latest/guide/platforms/android/index.html#setting-up-an-emulator">设置Android模拟器</a></li>
+<li><a target="_blank" rel="noopener" href="http://cordova.axuer.com/docs/zh-cn/latest/reference/cordova-cli/index.html#cordova-run-command">Cordova run 命令参考文档</a></li>
+<li><a target="_blank" rel="noopener" href="http://cordova.axuer.com/docs/zh-cn/latest/reference/cordova-cli/index.html#cordova-emulate-command">Cordova emulate 命令参考文档</a></li>
+</ul>
+<h3 id="添加插件"><a href="#添加插件" class="headerlink" title="添加插件"></a>添加插件</h3><p>如果只是开发一个 <code>Cordova</code> 框架的 <code>WebApp</code> ，那么你不需要装任何插件，直接用前端技术开发就好了，但是应该没人会这么做吧，毕竟开发这个的目的就是为了跨平台开发原生级移动 <code>App</code> ，因此要调用移动设备的各种功能就必须安装插件。</p>
+<h4 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h4><p><code>Cordova</code> 插件是一些使用 <code>Javascript</code> 调用原生 <code>SDK</code> 功能的包；<br>你可以使用两种方式找到你想要的插件</p>
+<ol>
+<li>通过 <code>Cordova</code> 提供的包管理平台 ⇒ <a target="_blank" rel="noopener" href="http://cordova.axuer.com/plugins/">插件搜索页</a></li>
+<li>通过命令行搜索 <em><strong><code>cordova plugin search camera</code></strong></em></li>
+</ol>
+<p>选好你要安装的插件之后你需要执行下面的命令来安装它</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cordova plugin add &lt;plugin name&gt; <span class="comment">// 如 cordova plugin add cordova-plugin-chrome-apps-proxy</span></span><br></pre></td></tr></table></figure>
+<p>如果你的包没有发布在 <code>Cordova</code> 的平台上，也可以使用 <code>git</code> 地址来安装。<br>另外 <code>Cordova</code> 还非常贴心的提供了一个工具 <code>Plugman</code> 来帮助开发者更好的管理 <code>Cordova</code> 插件。⇒ <a target="_blank" rel="noopener" href="http://cordova.axuer.com/docs/zh-cn/latest/plugin_ref/plugman.html">Plugman参考</a></p>
+<p>如果要查看你安装了哪些插件可以使用下面任意一种命令都可以。（咱也不知道为啥提供这么多方式，反正好用无脑）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">plugin ls</span><br><span class="line">plugin list</span><br><span class="line">plugin</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">$ cordova plugin ls</span></span><br><span class="line"><span class="comment">cordova-plugin-whitelist 1.2.1 &quot;Whitelist&quot;</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+<p>如果想知道更多关于 <code>plugin</code> 的命令参数，可以看右边的链接 ⇒ <a target="_blank" rel="noopener" href="http://cordova.axuer.com/docs/zh-cn/latest/reference/cordova-cli/index.html#cordova-plugin-command">plugin参数</a></p>
+<h4 id="使用-merges-自定义每个平台"><a href="#使用-merges-自定义每个平台" class="headerlink" title="使用 merges 自定义每个平台"></a>使用 <code>merges</code> 自定义每个平台</h4><p>虽然可以用一套代码来构建多个平台，但一些平台会有自己的特点，就好像 <code>Chrome</code> 浏览器默认的字体大小与 <code>IE</code> 的不同， <code>Android</code> 与 <code>IOS</code> 也有不一样的地方，这种情况下去改 <code>www</code> 目录下的文件显然是不合适的，所以 <code>Cordova</code> 提供了 <code>merges</code> 方式来适配不同平台各自的特别处理，你要做的就是在项目的根目录下创建一个 <code>merges</code> 目录，比如你要适配 <code>Android</code> ，你就可以在 <code>merges</code> 下创建一个 <code>android</code> 目录，然后在下面或覆盖或添加新的资源。（这里官网没有说 <code>merges</code> 在哪里创建，试验后发现是在根目录下）</p>
+<h4 id="更新-Cordova-和你的项目"><a href="#更新-Cordova-和你的项目" class="headerlink" title="更新 Cordova 和你的项目"></a>更新 <code>Cordova</code> 和你的项目</h4><p>如果你要更新你的 <code>Cordova</code> （通常不建议这么干，当然你知道后果并想要使用新的特性或者修正 <code>bug</code> 除外），那么你需要执行一下 <code>update</code> 命令</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo npm update -g cordova</span><br></pre></td></tr></table></figure>
+<p>当然你也可以指定更新到什么版本（这都是 <code>npm</code> 的知识了）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo npm install -g cordova@<span class="number">3.1</span><span class="number">.0</span>-<span class="number">0.2</span><span class="number">.0</span></span><br></pre></td></tr></table></figure>
+<p>你也可以使用下面的命令查看当前的版本（还是 <code>npm</code> 的知识）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm info cordova version</span><br></pre></td></tr></table></figure>
+<p>你是不是以为这样就可以了，不好意思还不行，你还需要把各个平台进行一下升级</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cordova platform update android --save</span><br><span class="line">cordova platform update ios --save</span><br><span class="line"><span class="comment">// ...</span></span><br></pre></td></tr></table></figure>
+<p>其实这也好理解，你都已经轿车换 <code>SUV</code> 了，总不能还用原来的车轱辘吧，只是我希望能不能在换车的时候一块儿把车轱辘换了（这里的意思是希望直接自动化处理了）</p>
+<p>到这里你的第一个 <code>App</code> 就已经开发好了，是不是还有点成就感。</p>
+<h3 id="一些参考资料"><a href="#一些参考资料" class="headerlink" title="一些参考资料"></a>一些参考资料</h3><p>到这里一个简单的基于 <code>Cordova</code> 搭建的 <code>App</code> 就实现了，当然一个 <code>App</code> 绝不这么简单，各平台的 <code>SDK</code> 安装也没那么简单，但这不是本篇文章要说的事了，下一篇文章我会说说如何应对各种不同的开发平台，在这之前还请你看一下 <code>Cordova</code> 都支持哪些平台，具体看一下下面的链接。</p>
+<p>好了，今天就先写到这里，下篇文章我们再见。</p>
+<p><a target="_blank" rel="noopener" href="http://cordova.axuer.com/docs/zh-cn/latest/guide/support/index.html">平台支持</a></p>
+<p>（待续…）</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>如果觉得不错请支持作者</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="李旭光 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Cordova/" rel="tag"># Cordova</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/11/09/learn-go/" rel="prev" title="从零开始：学习Go（一）">
+      <i class="fa fa-chevron-left"></i> 从零开始：学习Go（一）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/11/11/learn-ionic-1/" rel="next" title="从零开始：学习Ionic（一）">
+      从零开始：学习Ionic（一） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81What-is-Cordova%EF%BC%9F-Cordova%E6%98%AF%E4%B8%AA%E5%95%A5%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">一、What is Cordova？ Cordova是个啥？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B"><span class="nav-number">3.</span> <span class="nav-text">二、快速上手</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8FTip"><span class="nav-number">3.1.</span> <span class="nav-text">小Tip</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E8%AF%A6%E7%BB%86%E4%BA%86%E8%A7%A3"><span class="nav-number">4.</span> <span class="nav-text">三、详细了解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E6%A6%82%E8%A7%88"><span class="nav-number">4.1.</span> <span class="nav-text">1、概览</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#WebView"><span class="nav-number">4.1.1.</span> <span class="nav-text">WebView</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#WebApp"><span class="nav-number">4.1.2.</span> <span class="nav-text">WebApp</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8F%92%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="nav-number">4.1.3.</span> <span class="nav-text">插件系统</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E5%B7%A5%E4%BD%9C%E6%B5%81"><span class="nav-number">4.1.4.</span> <span class="nav-text">开发工作流</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%B7%A8%E5%B9%B3%E5%8F%B0-CLI-%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81"><span class="nav-number">4.1.4.1.</span> <span class="nav-text">跨平台(CLI)的工作流</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%B9%B3%E5%8F%B0%E4%B8%BA%E4%B8%AD%E5%BF%83%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81"><span class="nav-number">4.1.4.2.</span> <span class="nav-text">平台为中心的工作流</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E5%BC%80%E5%8F%91%E5%BA%94%E7%94%A8"><span class="nav-number">4.2.</span> <span class="nav-text">2、开发应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%9E%84%E5%BB%BA%E7%9A%84%E5%85%88%E5%86%B3%E6%9D%A1%E4%BB%B6"><span class="nav-number">4.3.</span> <span class="nav-text">安装构建的先决条件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA-App"><span class="nav-number">4.4.</span> <span class="nav-text">构建 App</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95-App"><span class="nav-number">4.5.</span> <span class="nav-text">测试 App</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E6%8F%92%E4%BB%B6"><span class="nav-number">4.6.</span> <span class="nav-text">添加插件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8F%92%E4%BB%B6"><span class="nav-number">4.6.1.</span> <span class="nav-text">插件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-merges-%E8%87%AA%E5%AE%9A%E4%B9%89%E6%AF%8F%E4%B8%AA%E5%B9%B3%E5%8F%B0"><span class="nav-number">4.6.2.</span> <span class="nav-text">使用 merges 自定义每个平台</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0-Cordova-%E5%92%8C%E4%BD%A0%E7%9A%84%E9%A1%B9%E7%9B%AE"><span class="nav-number">4.6.3.</span> <span class="nav-text">更新 Cordova 和你的项目</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">4.7.</span> <span class="nav-text">一些参考资料</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李旭光"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">李旭光</p>
+  <div class="site-description" itemprop="description">学习 | 生活 | 成长</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">93</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">61</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/lixuguang" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;lixuguang" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:lixuguang316@gmail.com" title="E-Mail → mailto:lixuguang316@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://he8hepeng.github.io/" title="http:&#x2F;&#x2F;he8hepeng.github.io" rel="noopener" target="_blank">何鹏</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://wangning0916.github.io/" title="https:&#x2F;&#x2F;wangning0916.github.io" rel="noopener" target="_blank">王宁</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+  <div class="languages">
+    <label class="lang-select-label">
+      <i class="fa fa-language"></i>
+      <span>简体中文</span>
+      <i class="fa fa-angle-up" aria-hidden="true"></i>
+    </label>
+    <select class="lang-select" data-canonical="">
+      
+        <option value="zh-CN" data-href="/2020/11/10/learn-cordova-1/" selected="">
+          简体中文
+        </option>
+      
+        <option value="en" data-href="/en/2020/11/10/learn-cordova-1/" selected="">
+          English
+        </option>
+      
+        <option value="ja" data-href="/ja/2020/11/10/learn-cordova-1/" selected="">
+          日本語
+        </option>
+      
+    </select>
+  </div>
+
+        
+
+<div class="copyright">
+  
+  &copy; 2013 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李旭光</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'd0f9385a6852112b2abe',
+      clientSecret: '55829d977cda5d295b07f0249ef5b1ffcb52f170',
+      repo        : 'lixuguang.github.io',
+      owner       : 'lixuguang',
+      admin       : ['lixuguang'],
+      id          : '7d7eacb09a1f63693f5eefab15a7abb6',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>
